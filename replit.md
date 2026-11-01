@@ -1,6 +1,6 @@
-# [Project name]
+# Lanche da Casa
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Loja de delivery para crepes, mini pastéis e batatas, com pedidos enviados pelo WhatsApp e painel administrativo.
 
 ## Run & Operate
 
@@ -9,7 +9,7 @@ _Replace the heading above with the project's name, and this line with one sente
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Required env: `DATABASE_URL` — PostgreSQL connection string; `SESSION_SECRET` — assinatura das sessões administrativas
 
 ## Stack
 
@@ -22,23 +22,33 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — contrato da API
+- `lib/db/src/schema/` — tabelas de produtos, loja, pedidos e administrador
+- `artifacts/api-server/src/routes/delivery.ts` — endpoints do delivery
+- `artifacts/api-server/src/lib/seed-store.ts` — catálogo inicial, criado apenas na primeira inicialização
+- `artifacts/lanche-delivery/src/App.tsx` — loja, carrinho, checkout e painel
+- `artifacts/lanche-delivery/src/index.css` — identidade visual e responsividade
+- `artifacts/lanche-delivery/public/products/` — fotos ilustrativas iniciais
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- O primeiro acesso a `/admin` cria a senha; não há credencial administrativa padrão.
+- O servidor valida as seleções e recalcula os valores do pedido usando os preços atuais do catálogo.
+- O pedido é gravado no banco antes de abrir a conversa do WhatsApp; o telefone comercial deve ser configurado no painel.
+- Logo e fotos comerciais podem ser substituídas por URLs no painel; as imagens atuais são ilustrativas.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Clientes consultam o cardápio, montam combos, personalizam batatas, revisam o pedido e o enviam pelo WhatsApp. A equipe administra produtos, preços, identidade, taxa de entrega e pedidos registrados.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Manter a solução simples, responsiva para Android e sem serviços ou APIs pagas desnecessárias.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Configure o número do WhatsApp e a taxa de entrega em `/admin` antes de receber pedidos.
+- A senha administrativa exige pelo menos 8 caracteres e é armazenada como hash; as sessões usam `SESSION_SECRET`.
 
 ## Pointers
 

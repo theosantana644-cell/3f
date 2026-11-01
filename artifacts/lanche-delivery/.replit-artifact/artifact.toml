@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Delivery de Lanches"
+description = "Loja online responsiva para pedidos de crepes, mini pastéis e batatas fritas, com carrinho, finalização pelo WhatsApp e painel administrativo."
+version = "1.0.0"
+id = "artifacts/lanche-delivery"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20013
+
+[services.development]
+run = "pnpm --filter @workspace/lanche-delivery run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/lanche-delivery", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/lanche-delivery/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20013"
+BASE_PATH = "/"
